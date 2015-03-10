@@ -1,0 +1,52 @@
+#include "BoardParser.h"
+#include <stdlib.h>
+
+
+BoardParser::BoardParser() {
+	board = new Board();
+}
+
+BoardParser::~BoardParser() {
+}
+
+const char* readAttribute(TiXmlElement* elem, const char* tag) {
+	const char* attribute = elem->attribute(tag);
+	if(attribute == NULL)
+		return "";
+	return attribute;
+}
+
+string BoardParser::readElement(TiXmlElement* elem, const char* tag) {
+	TiXmlElement* e = elem->FirstChildElement(tag);
+	TiXmlNode* node = e->FirstChild();
+	TiXmlText* text = node->ToText();
+	if(text == NULL)
+		return "";
+	return text->Value();
+}
+
+Board* BoardParser::parseBoard(TiXmlElement* elem) {	
+	string board_name = readElement(elem, "NAAM");
+	int length = readElement(elem, "LENGTE");
+	int width = readElement(elem, "BREEDTE");
+
+	TiXmlElement* player_element = elem->FirstChildELement("SPELER");
+	string player_name = readElement(player_element, "NAAM");
+	int player_x = atoi(readAttribute(player_element->attribute("x")));
+	int player_y = atoi(readAttribute(player_element->attribute("y")));
+	Player player(player_name);
+
+	vector<Entity> entities;
+	for(TiXmlElement* object_element = elem->FirstChildElement("OBSTAKEL"); object_element != NULL; 
+		object_element = object_element->NextSiblingElement("OBSTAKEL")){
+		bool movable = readAttribute(object_element, attribute("beweegbaar")) == "true";
+		int object_x = atoi(readAttribute(object_element->attribute("x")));
+		int object_y = atoi(readAttribute(object_element->attribute("y")));	
+		string type = readElement(object_element->FirstChildElement("TYPE"));
+
+		Entity entity(true, movable, type);
+		entities.push_back(entity);
+	}
+
+	return Board(length, width, board_name, player, entities);
+}

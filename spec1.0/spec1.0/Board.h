@@ -1,16 +1,26 @@
-
 #ifndef Base3D_CC
 #define Base3D_CC
 
+using namespace std;
+
 class Board{
 private:
-	// entities includes player
-	vector<Entity*> entities;
-	Player player;
+	string fBoardName;
+	int fBoardLength;
+	int fBoardWidth
+	vector<Entity*> fEntitiesPointer;
+	Player fPlayer;
+	vector<vector<Entity*> > fBoard;
 public:
-	//Default constructor
-	Board();
+	Board(int width, int length, string name, Player player, 
+		vector<Entity*> boardEntities);
 
+	void setName(string boardName);
+	void setPlayer(Player& player);
+	void addEntity(Entity* entity);
+	string getBoardName();
+	Player getPlayer();
+	vector<Entity> getEntities();
 };
 
 

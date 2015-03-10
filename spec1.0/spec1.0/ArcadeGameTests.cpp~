@@ -12,7 +12,6 @@
 
 using namespace std;
 
-#include "TicTacToe.h"
 
 class ArcadeGameTest: public ::testing::Test {
 protected:
