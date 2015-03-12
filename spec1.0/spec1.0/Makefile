@@ -1,66 +1,44 @@
-#--- the location of the test includes; YOU MIGHT NEED TO MODIFY THESE
-INCL =		../gtest/include
-#--- the location of the test libraries; YOU MIGHT NEED TO MODIFY THESE
+# -I[path of include] (You might need to modify)
+INCLUDE =	../gtest/include
+CXX =		g++
+CXXFLAGS =	-O2 -g -Wall -fmessage-length=0 -I$(INCLUDE)
+
 TLIBPATH =	-L../gtest/lib
 TLIBS =		-lgtest -lgtest_main
 
+# program sources
+MAIN_SOURCES =	$(filter-out ./ArcadeGameTests, $(basename $(shell find . -name "*.cpp")))
+MAIN_OBJECTS =	$(addsuffix .o,$(MAIN_SOURCES))
 
-CXXFLAGS =	-O2 -g -Wall -fmessage-length=0 -I$(INCL) 
+TEST_SOURCES =	$(filter-out ./ArcadeGameMain, $(basename $(shell find . -name "*.cpp")))
+TEST_OBJECTS =	$(addsuffix .o,$(TEST_SOURCES)) 
 
-OBJS =		TicTacToe.o
-
-SRCS =		TicTacToe.cpp \
-			TicTacToeMain.cpp \
-			TicTacToeTests.cpp
-TARGET =	TicTacToeMain	TicTacToeTests
-
-#--- primary target
-.PHONY : all
-all : $(TARGET)
-
-
-#--- compiler targets
-TicTacToeMain : $(OBJS) TicTacToeMain.o
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) TicTacToeMain.o
-
-TicTacToeTests : $(OBJS) TicTacToeTests.o
-	$(CXX) $(CXXFLAGS) $(TLIBPATH) $(TLIBS) -o $@ $(OBJS) TicTacToeTests.o
-
-%.o : %.cpp %.h
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-
-
-#--- non-file targets
-.PHONY : clean
-clean :
-	rm -f *.o $(TARGET)
-	rm -f testOutput/file*.txt testOutput/happyDayOut.txt  testOutput/noWinnerOut.txt
-
-.PHONY : cleantests
-cleantests :
-	rm -f testOutput/file*.txt testOutput/happyDayOut.txt
-
-.PHONY : depend
-depend :
-	g++ -MM -I $(INCL) $(SRCS)
+# The possible executables
+EXEC =		ArcadeGameMain	ArcadeGameTests
 
 .PHONY : echo
-echo :
-	@echo CXXFLAGS = $(CXXFLAGS)
-	@echo CXX = $(CXX)
-	@echo LDFLAGS = $(LDFLAGS)
-	@echo INCL = $(INCL)
-	@echo TLIBPATH = $(TLIBPATH)
-	@echo TLIBS = $(TLIBS)
+echo : 
+	echo $(TEST_OBJECTS)
+
+.PHONY : all
+all : $(EXEC)
+
+#--- compiler targets
+ArcadeGameTests : $(TEST_OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $(TEST_OBJECTS) $(TLIBPATH) $(TLIBS) -pthread
+
+ArcadeGameMain : $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $(MAIN_OBJECTS)
 
 
-.PHONY : sourcestar
-sourcestar :
-	tar -cvf TicTacToe.tar *.h *.cpp Makefile testOutput
+# cleans the object files and executables
+.PHONY : clean
+clean :
+	find . -name "*.o" -delete
+	find . -name "*.d" -delete
+	rm -f $(EXEC:=.exe)
+	rm -rf $(OBJDIR)
 	
-.PHONY : sourceszip
-sourceszip :
-	zip -q -r TicTacToe.zip *.h *.cpp Makefile testOutput
-#--zip quietly and recursively
-
+	
+	
+	
