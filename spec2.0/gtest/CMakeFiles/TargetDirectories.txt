@@ -1,0 +1,2 @@
+/home/uauser/Desktop/ArcadeGame/spec1.0/gtest/CMakeFiles/gtest.dir
+/home/uauser/Desktop/ArcadeGame/spec1.0/gtest/CMakeFiles/gtest_main.dir
