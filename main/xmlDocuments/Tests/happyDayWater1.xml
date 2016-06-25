@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<VELD>
+    <NAAM>happyDayWater1</NAAM>
+    <LENGTE>10</LENGTE>
+    <BREEDTE>12</BREEDTE>
+    <SPELER x="4" y="1">
+        <NAAM>HappyDayGuy</NAAM>
+    </SPELER>
+    <TON beweegbaar="true" x="5" y="1"/>
+    <TON beweegbaar="true" x="5" y="2"/>
+    <WATER beweegbaar="false" x="5" y="3"/>
+</VELD>
